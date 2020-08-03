@@ -10,7 +10,7 @@ server.use(restify.plugins.bodyParser());
 server.listen(config.PORT, () => {
     mongoose.connect(
         config.MONGODB_URI,
-        { useNewUrlParser : true }
+        { useNewUrlParser: true }
     );
 });
 
@@ -18,5 +18,6 @@ const db = mongoose.connection;
 db.on('error', (err) => console.log(err));
 db.once('open', () => {
     require('./routes/customers')(server);
+    require('./routes/user')(server);
     console.log(`server started on port ${config.PORT}`);
 });
