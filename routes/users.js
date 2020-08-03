@@ -1,10 +1,10 @@
 const errors = require('restify-errors');
 const bcrypt = require('bcryptjs');
 const User = require('../models/Users');
+const Auth = require('../auth')
 
 module.exports = server => {
-
-    server.post('/register', () => (req, res, next) => {
+    server.post('/register', (req, res, next) => {
         const { email, password } = req.body;
         const user = new User({
             email,
@@ -24,4 +24,15 @@ module.exports = server => {
             });
         });
     });
+
+    server.post('/auth', async (req, res, next) => {
+        const { email, password } = req.body;
+        try {
+            const user = await Auth.authenticate(email, password);
+            console.log(user);
+            next();
+        } catch (err) {
+            return next(new errors.UnauthorizedError(err));
+        }
+    })
 }
